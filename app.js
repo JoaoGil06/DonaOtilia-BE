@@ -9,7 +9,7 @@ const hpp = require('hpp');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
-const wineRouter = require('./routes/winesCategoryRoutes');
+const wineRouter = require('./routes/wineRoutes');
 const userRouter = require('./routes/userRoutes');
 const winesCategoryRouter = require('./routes/winesCategoryRoutes');
 

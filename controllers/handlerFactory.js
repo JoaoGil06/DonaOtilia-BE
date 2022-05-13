@@ -4,9 +4,10 @@ const catchAsync = require('./../utils/catchAsync.js');
 
 exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
-    // To allow for nested GET reviews on Tour
+    // To allow for nested GET Wines by CategoryID
     let filter = {};
-    if (req.params.tourId) filter = { tour: req.params.tourId };
+    if (req.params.categoryId)
+      filter = { category: { _id: req.params.categoryId } };
 
     const features = new APIFeatures(Model.find(filter), req.query)
       .filter()

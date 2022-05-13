@@ -5,6 +5,7 @@ const {
   createWine,
   updateWine,
   deleteWine,
+  getAllWinesByCategory,
 } = require('./../controllers/wineController');
 
 const { protect, restrictTo } = require('./../controllers/authController');
@@ -21,5 +22,7 @@ router
   .get(getWine)
   .patch(protect, restrictTo('admin'), updateWine)
   .delete(protect, restrictTo('admin'), deleteWine);
+
+router.route('/category/:categoryId').get(getAllWinesByCategory);
 
 module.exports = router;
