@@ -35,7 +35,7 @@ const wineSchema = new mongoose.Schema({
       type: [String],
       required: [true, 'Um vinho deve sempre ter castas em português'],
     },
-    pt: {
+    en: {
       type: [String],
       required: [true, 'Um vinho deve sempre ter castas em inglês'],
     },
@@ -48,8 +48,8 @@ const wineSchema = new mongoose.Schema({
     en: String,
   },
   grade_results: {
-    gpt: String,
-    gen: String,
+    pt: String,
+    en: String,
   },
   harmony_suggestion: {
     pt: String,

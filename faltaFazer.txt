@@ -9,3 +9,6 @@ Entidades
 
 Models Pages:
 - Todas
+
+Users:
+- Get Current User ('/me'), por causa de ter o cenas de dizer olá nome do utiizador

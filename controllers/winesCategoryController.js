@@ -1,39 +1,42 @@
-const AppError = require('./../utils/AppError');
 const WinesCategory = require('../models/winesCategoryModel');
 const catchAsync = require('./../utils/catchAsync.js');
 const factory = require('./handlerFactory');
+const multer = require('multer');
 
-exports.getAllWinesCategories = catchAsync(async (req, res) => {
-  const winesCategories = await WinesCategory.find();
-
-  res.status(200).json({
-    status: 'success',
-    results: winesCategories.length,
-    data: {
-      winesCategories,
-    },
-  });
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/img/wines');
+  },
+  filename: (req, file, cb) => {
+    const ext = file.mimetype.split('/')[1];
+    cb(null, `wineCategory-${req.body.title.en}-${Date.now()}.${ext}`);
+  },
 });
 
-exports.getWinesCategory = catchAsync(async (req, res) => {
-  const wineCategory = await WinesCategory.findById(req.params.id);
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    // Fazer aqui uma verificação para video;
+    // Primeiro fazer console.log do file.mimetype
+    cb(new AppError('Not and image! Please upload only images', 400), false);
+  }
+};
 
-  if (!wineCategory) {
-    next(
-      new AppError('Nenhuma categoria de vinho encontrada com esse ID', 404)
-    );
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.createWinesCategory = catchAsync(async (req, res, next) => {
+  let filteredBody = req.body;
+
+  if (req.file) {
+    filteredBody.image = req.file.filename;
   }
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      wineCategory,
-    },
-  });
-});
-
-exports.createWinesCategory = catchAsync(async (req, res) => {
-  const newWineCategory = await WinesCategory.create(req.body);
+  // next();
+  const newWineCategory = await WinesCategory.create(filteredBody);
 
   res.status(201).json({
     status: 'success',
@@ -43,28 +46,12 @@ exports.createWinesCategory = catchAsync(async (req, res) => {
   });
 });
 
-exports.updateWinesCategory = catchAsync(async (req, res) => {
-  const wineCategory = await WinesCategory.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
+exports.uploadCategoryImage = upload.single('image');
 
-  if (!wineCategory) {
-    next(
-      new AppError('Nenhuma categoria de vinho encontrada com esse ID', 404)
-    );
-  }
+exports.getAllWinesCategories = factory.getAll(WinesCategory);
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      wineCategory,
-    },
-  });
-});
+exports.getWinesCategory = factory.getOne(WinesCategory);
+
+exports.updateWinesCategory = factory.updateOne(WinesCategory);
 
 exports.deleteWinesCategory = factory.deleteOne(WinesCategory);

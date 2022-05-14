@@ -5,16 +5,17 @@ const {
   createWinesCategory,
   updateWinesCategory,
   deleteWinesCategory,
-} = require('../controllers/winesCategoryController');
+  uploadCategoryImage,
+} = require('./../controllers/winesCategoryController');
 
-const { protect, restrictTo } = require('../controllers/authController');
+const { protect, restrictTo } = require('./../controllers/authController');
 
 const router = express.Router();
 
 router
   .route('/')
   .get(getAllWinesCategories)
-  .post(protect, restrictTo('admin'), createWinesCategory);
+  .post(protect, restrictTo('admin'), uploadCategoryImage, createWinesCategory);
 
 router
   .route('/:id')

@@ -6,6 +6,7 @@ const {
   updateWine,
   deleteWine,
   getAllWinesByCategory,
+  uploadHarmonySuggestionImage,
 } = require('./../controllers/wineController');
 
 const { protect, restrictTo } = require('./../controllers/authController');
@@ -15,7 +16,7 @@ const router = express.Router();
 router
   .route('/')
   .get(getAllWines)
-  .post(protect, restrictTo('admin'), createWine);
+  .post(protect, restrictTo('admin'), uploadHarmonySuggestionImage, createWine);
 
 router
   .route('/:id')

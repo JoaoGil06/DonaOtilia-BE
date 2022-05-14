@@ -1,63 +1,54 @@
-const AppError = require('./../utils/AppError');
 const Wine = require('./../models/wineModel');
-const APIFeatures = require('./../utils/apiFeatures');
-const catchAsync = require('./../utils/catchAsync.js');
 const factory = require('./handlerFactory');
+const multer = require('multer');
+const catchAsync = require('./../utils/catchAsync.js');
+const AppError = require('../utils/AppError');
 
-exports.getAllWines = catchAsync(async (req, res) => {
-  // Query Executing
-  const features = new APIFeatures(Wine.find(), req.query)
-    .filter()
-    .limitFields()
-    .paginate();
-  const wines = await features.query;
-
-  res.status(200).json({
-    status: 'success',
-    results: wines.length,
-    data: {
-      wines,
-    },
-  });
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/img/wines');
+  },
+  filename: (req, file, cb) => {
+    const ext = file.mimetype.split('/')[1];
+    cb(null, `wine-${req.body.title.en}-${Date.now()}.${ext}`);
+  },
 });
 
-exports.getWine = catchAsync(async (req, res) => {
-  const wine = await Wine.findById(req.params.id);
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    // Fazer aqui uma verificação para video;
+    // Primeiro fazer console.log do file.mimetype
+    cb(new AppError('Not and image! Please upload only images', 400), false);
+  }
+};
 
-  if (!wine) {
-    next(new AppError('Nenhum vinho encontrado com esse ID', 404));
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.uploadHarmonySuggestionImage = upload.single(
+  'harmony_suggestion[image]'
+);
+
+exports.getAllWines = factory.getAll(Wine);
+
+exports.getAllWinesByCategory = factory.getAll(Wine);
+
+exports.getWine = factory.getOne(Wine);
+
+exports.createWine = catchAsync(async (req, res, next) => {
+  let filteredBody = req.body;
+
+  if (req.file) {
+    // Aqui é para substituir originalName por filename
+    filteredBody.harmony_suggestion.image = req.file.filename;
   }
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      wine,
-    },
-  });
-});
-
-exports.getAllWinesByCategory = catchAsync(async (req, res) => {
-  const features = new APIFeatures(
-    Wine.find({ category: { _id: req.params.categoryId } }),
-    req.query
-  )
-    .filter()
-    .limitFields()
-    .paginate();
-
-  const wines = await features.query;
-
-  res.status(200).json({
-    status: 'success',
-    results: wines.length,
-    data: {
-      wines,
-    },
-  });
-});
-
-exports.createWine = catchAsync(async (req, res) => {
-  const newWine = await Wine.create(req.body);
+  // next();
+  const newWine = await Wine.create(filteredBody);
 
   res.status(201).json({
     status: 'success',
