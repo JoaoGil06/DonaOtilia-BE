@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const WinesCategory = require('./winesCategoryModel');
 
 const wineSchema = new mongoose.Schema({
   title: {
@@ -21,8 +20,8 @@ const wineSchema = new mongoose.Schema({
     en: String,
   },
   brand: {
-    type: String,
-    required: [true, 'Um vinho deve sempre ter uma marca'],
+    type: mongoose.Schema.ObjectId,
+    ref: 'Brand',
   },
   images: {
     product_img: String,
@@ -62,6 +61,10 @@ const wineSchema = new mongoose.Schema({
 wineSchema.pre('save', function (next) {
   this.slug = slugify(this.title.en, { lower: true });
 
+  this.populate({
+    path: 'brand',
+  });
+
   next();
 });
 
@@ -76,6 +79,14 @@ wineSchema.pre('save', function (next) {
 wineSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'category',
+  });
+
+  next();
+});
+
+wineSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'brand',
   });
 
   next();
