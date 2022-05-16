@@ -1,9 +1,7 @@
-- Implementar nested routes para obter os vinhos pelo ID da categoria
-
 Falta criar em Models:
 Entidades
-- Brands (Para os vinhos);
-- Cocktails;
+- Brands (Para os vinhos); -> FEITO
+- Cocktails; 
 - Gallery;
 - Premios;
 
@@ -11,4 +9,4 @@ Models Pages:
 - Todas
 
 Users:
-- Get Current User ('/me'), por causa de ter o cenas de dizer olá nome do utiizador
+- Get Current User ('/me'), por causa de ter o cenas de dizer olá nome do utiizador -> Já está hoje
