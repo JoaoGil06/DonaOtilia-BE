@@ -1,9 +1,14 @@
 Falta criar em Models:
 Entidades
 - Brands (Para os vinhos); -> FEITO
-- Cocktails; 
+- Cocktails -> FEITO; 
 - Gallery;
-- Premios;
+- Premios ;
+
+- É preciso adaptar o Multer para fazer upload de mais de uma imagem e que possa suportar video (no caso da HomePage) porque isto vai ser preciso para suportar as páginas
+e o Wine e WinesCategory
+
+- No caso da galeria, o que se vai fazer é só uma imagem, mas grava-se duas x, uma com o tamanho e outra com um resize (para já de 500x500)
 
 Models Pages:
 - Todas
