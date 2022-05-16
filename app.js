@@ -13,6 +13,7 @@ const wineRouter = require('./routes/wineRoutes');
 const userRouter = require('./routes/userRoutes');
 const winesCategoryRouter = require('./routes/winesCategoryRoutes');
 const brandRouter = require('./routes/brandRoutes');
+const cocktailRouter = require('./routes/cocktailRoutes');
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use('/api/v1/wines', wineRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/categories', winesCategoryRouter);
 app.use('/api/v1/brands', brandRouter);
+app.use('/api/v1/cocktails', cocktailRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
