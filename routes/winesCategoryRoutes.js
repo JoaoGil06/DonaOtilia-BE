@@ -20,7 +20,7 @@ router
 router
   .route('/:id')
   .get(getWinesCategory)
-  .patch(protect, restrictTo('admin'), updateWinesCategory)
+  .patch(protect, restrictTo('admin'), uploadCategoryImage, updateWinesCategory)
   .delete(protect, restrictTo('admin'), deleteWinesCategory);
 
 module.exports = router;

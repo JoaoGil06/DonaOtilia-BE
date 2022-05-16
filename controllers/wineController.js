@@ -52,12 +52,32 @@ exports.createWine = catchAsync(async (req, res, next) => {
 
   res.status(201).json({
     status: 'success',
-    data: {
-      wine: newWine,
-    },
+    data: newWine,
   });
 });
 
-exports.updateWine = factory.updateOne(Wine);
+exports.updateWine = catchAsync(async (req, res, next) => {
+  let filteredBody = req.body;
+
+  if (req.file) {
+    filteredBody.harmony_suggestion.image = req.file.filename;
+  }
+
+  const { id } = req.params;
+
+  const doc = await Wine.findByIdAndUpdate(id, filteredBody, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!doc) {
+    return next(new AppError('Nenhum documento encontrado com esse ID', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: doc,
+  });
+});
 
 exports.deleteWine = factory.deleteOne(Wine);

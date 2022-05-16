@@ -28,30 +28,54 @@ const upload = multer({
   fileFilter: multerFilter,
 });
 
+exports.uploadCategoryImage = upload.single('image');
+
 exports.createWinesCategory = catchAsync(async (req, res, next) => {
   let filteredBody = req.body;
 
   if (req.file) {
+    console.log('entrou aqui v1');
+
     filteredBody.image = req.file.filename;
   }
+
+  console.log('entrou aqui');
 
   // next();
   const newWineCategory = await WinesCategory.create(filteredBody);
 
   res.status(201).json({
     status: 'success',
-    data: {
-      wineCategory: newWineCategory,
-    },
+    data: newWineCategory,
   });
 });
 
-exports.uploadCategoryImage = upload.single('image');
+exports.updateWinesCategory = catchAsync(async (req, res, next) => {
+  let filteredBody = req.body;
+
+  if (req.file) {
+    filteredBody.image = req.file.filename;
+  }
+
+  const { id } = req.params;
+
+  const doc = await WinesCategory.findByIdAndUpdate(id, filteredBody, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!doc) {
+    return next(new AppError('Nenhum documento encontrado com esse ID', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: doc,
+  });
+});
 
 exports.getAllWinesCategories = factory.getAll(WinesCategory);
 
 exports.getWinesCategory = factory.getOne(WinesCategory);
-
-exports.updateWinesCategory = factory.updateOne(WinesCategory);
 
 exports.deleteWinesCategory = factory.deleteOne(WinesCategory);

@@ -21,7 +21,7 @@ router
 router
   .route('/:id')
   .get(getWine)
-  .patch(protect, restrictTo('admin'), updateWine)
+  .patch(protect, restrictTo('admin'), uploadHarmonySuggestionImage, updateWine)
   .delete(protect, restrictTo('admin'), deleteWine);
 
 router.route('/category/:categoryId').get(getAllWinesByCategory);
