@@ -15,6 +15,7 @@ const winesCategoryRouter = require('./routes/winesCategoryRoutes');
 const brandRouter = require('./routes/brandRoutes');
 const cocktailRouter = require('./routes/cocktailRoutes');
 const awardRouter = require('./routes/awardRoutes');
+const galleryImageRouter = require('./routes/galleryImageRoutes');
 
 const app = express();
 
@@ -54,6 +55,7 @@ app.use('/api/v1/categories', winesCategoryRouter);
 app.use('/api/v1/brands', brandRouter);
 app.use('/api/v1/cocktails', cocktailRouter);
 app.use('/api/v1/awards', awardRouter);
+app.use('/api/v1/gallery', galleryImageRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

@@ -23,11 +23,13 @@ const wineSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'Brand',
   },
-  images: {
-    product_img: String,
-    product_img_hover: String,
-    bottle_img: String,
-  },
+  bottle_image: String,
+  product_img: String,
+  product_img_hover: String,
+  // images: {
+  //   product_img: String,
+  //   product_img_hover: String,
+  // },
   year: Number,
   castes: {
     pt: {
@@ -53,8 +55,8 @@ const wineSchema = new mongoose.Schema({
   harmony_suggestion: {
     pt: String,
     en: String,
-    image: String,
   },
+  harmony_suggestion_image: String,
   category: { type: mongoose.Schema.ObjectId, ref: 'WinesCategory' },
 });
 

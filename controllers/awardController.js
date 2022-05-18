@@ -3,16 +3,9 @@ const factory = require('./handlerFactory');
 const multer = require('multer');
 const catchAsync = require('./../utils/catchAsync.js');
 const AppError = require('../utils/AppError');
+const sharp = require('sharp');
 
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/img/awards');
-  },
-  filename: (req, file, cb) => {
-    const ext = file.mimetype.split('/')[1];
-    cb(null, `award-${req.body.title.en}-${Date.now()}.${ext}`);
-  },
-});
+const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
@@ -31,48 +24,30 @@ const upload = multer({
 
 exports.uploadAwardImage = upload.single('image');
 
+exports.resizeAwardImage = catchAsync(async (req, res, next) => {
+  // 1) Image
+  if (req.file) {
+    const awardImage = `award-${req.body.title.en
+      .split(' ')
+      .join('')}-${Date.now()}.jpeg`;
+
+    await sharp(req.file.buffer)
+      .toFormat('jpeg')
+      .jpeg({ quality: 90 })
+      .toFile(`public/img/awards/${awardImage}`);
+
+    req.body.image = awardImage;
+  }
+
+  next();
+});
+
 exports.getAllAwards = factory.getAll(Award);
 
 exports.getAward = factory.getOne(Award);
 
-exports.createAward = catchAsync(async (req, res, next) => {
-  let filteredBody = req.body;
+exports.createAward = factory.createOne(Award);
 
-  if (req.file) {
-    filteredBody.image = req.file.filename;
-  }
-
-  // next();
-  const newAward = await Award.create(filteredBody);
-
-  res.status(201).json({
-    status: 'success',
-    data: newAward,
-  });
-});
-
-exports.updateAward = catchAsync(async (req, res, next) => {
-  let filteredBody = req.body;
-
-  if (req.file) {
-    filteredBody.image = req.file.filename;
-  }
-
-  const { id } = req.params;
-
-  const doc = await Award.findByIdAndUpdate(id, filteredBody, {
-    new: true,
-    runValidators: true,
-  });
-
-  if (!doc) {
-    return next(new AppError('Nenhum documento encontrado com esse ID', 404));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: doc,
-  });
-});
+exports.updateAward = factory.updateOne(Award);
 
 exports.deleteAward = factory.deleteOne(Award);

@@ -2,16 +2,9 @@ const WinesCategory = require('../models/winesCategoryModel');
 const catchAsync = require('./../utils/catchAsync.js');
 const factory = require('./handlerFactory');
 const multer = require('multer');
+const sharp = require('sharp');
 
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/img/wines');
-  },
-  filename: (req, file, cb) => {
-    const ext = file.mimetype.split('/')[1];
-    cb(null, `wineCategory-${req.body.title.en}-${Date.now()}.${ext}`);
-  },
-});
+const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
@@ -30,52 +23,30 @@ const upload = multer({
 
 exports.uploadCategoryImage = upload.single('image');
 
-exports.createWinesCategory = catchAsync(async (req, res, next) => {
-  let filteredBody = req.body;
-
+exports.resizeCategoryImage = catchAsync(async (req, res, next) => {
+  // 1) Image
   if (req.file) {
-    console.log('entrou aqui v1');
+    const categoryImage = `wineCategory-${req.body.title.en
+      .split(' ')
+      .join('')}-${Date.now()}.jpeg`;
 
-    filteredBody.image = req.file.filename;
+    await sharp(req.file.buffer)
+      .toFormat('jpeg')
+      .jpeg({ quality: 90 })
+      .toFile(`public/img/wines/${categoryImage}`);
+
+    req.body.image = categoryImage;
   }
 
-  console.log('entrou aqui');
-
-  // next();
-  const newWineCategory = await WinesCategory.create(filteredBody);
-
-  res.status(201).json({
-    status: 'success',
-    data: newWineCategory,
-  });
-});
-
-exports.updateWinesCategory = catchAsync(async (req, res, next) => {
-  let filteredBody = req.body;
-
-  if (req.file) {
-    filteredBody.image = req.file.filename;
-  }
-
-  const { id } = req.params;
-
-  const doc = await WinesCategory.findByIdAndUpdate(id, filteredBody, {
-    new: true,
-    runValidators: true,
-  });
-
-  if (!doc) {
-    return next(new AppError('Nenhum documento encontrado com esse ID', 404));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: doc,
-  });
+  next();
 });
 
 exports.getAllWinesCategories = factory.getAll(WinesCategory);
 
 exports.getWinesCategory = factory.getOne(WinesCategory);
+
+exports.createWinesCategory = factory.createOne(WinesCategory);
+
+exports.updateWinesCategory = factory.updateOne(WinesCategory);
 
 exports.deleteWinesCategory = factory.deleteOne(WinesCategory);
