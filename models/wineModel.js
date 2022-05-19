@@ -26,10 +26,6 @@ const wineSchema = new mongoose.Schema({
   bottle_image: String,
   product_img: String,
   product_img_hover: String,
-  // images: {
-  //   product_img: String,
-  //   product_img_hover: String,
-  // },
   year: Number,
   castes: {
     pt: {

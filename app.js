@@ -17,6 +17,13 @@ const cocktailRouter = require('./routes/cocktailRoutes');
 const awardRouter = require('./routes/awardRoutes');
 const galleryImageRouter = require('./routes/galleryImageRoutes');
 
+//Pages
+const homePageRouter = require('./routes/pages/homePageRoutes');
+const winesCategoryPageRouter = require('./routes/pages/winesCategoryPageRoutes');
+const galleryPageRouter = require('./routes/pages/galleryPageRoutes');
+const awardsPageRouter = require('./routes/pages/awardsPageRoute');
+const cocktailsPageRouter = require('./routes/pages/cocktailsPageRoute');
+
 const app = express();
 
 // Security HTTP Headers
@@ -55,7 +62,14 @@ app.use('/api/v1/categories', winesCategoryRouter);
 app.use('/api/v1/brands', brandRouter);
 app.use('/api/v1/cocktails', cocktailRouter);
 app.use('/api/v1/awards', awardRouter);
-app.use('/api/v1/gallery', galleryImageRouter);
+app.use('/api/v1/galleryImage', galleryImageRouter);
+
+// Pages
+app.use('/api/v1/homePage', homePageRouter);
+app.use('/api/v1/winesCategoryPage', winesCategoryPageRouter);
+app.use('/api/v1/galleryPage', galleryPageRouter);
+app.use('/api/v1/awardsPage', awardsPageRouter);
+app.use('/api/v1/cocktailsPage', cocktailsPageRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
