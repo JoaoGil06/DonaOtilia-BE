@@ -1,18 +1,25 @@
 const multer = require('multer');
-const sharp = require('sharp');
 const HomePage = require('./../../models/pages/homePageModel');
 const factory = require('./../handlerFactory');
 const catchAsync = require('./../../utils/catchAsync.js');
 const AppError = require('./../../utils/AppError');
 
-const multerStorage = multer.memoryStorage();
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/img/home');
+  },
+  filename: (req, file, cb) => {
+    const ext = file.mimetype.split('/')[1];
+    cb(null, `home-${file.fieldname}.${ext}`);
+  },
+});
 
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
     cb(null, true);
+  } else if (file.mimetype.startsWith('video')) {
+    cb(null, true);
   } else {
-    // Fazer aqui uma verificação para video;
-    // Primeiro fazer console.log do file.mimetype
     cb(new AppError('Not and image! Please upload only images', 400), false);
   }
 };
@@ -28,43 +35,44 @@ exports.uploadHomePageImages = upload.fields([
   { name: 'banner_image', maxCount: 1 },
 ]);
 
-exports.resizeHomePageImages = catchAsync(async (req, res, next) => {
+exports.saveHomePageFilesInDB = catchAsync(async (req, res, next) => {
   // 1) Background Hero
   if (req.files.hero_background) {
-    const backgroundImageFilename = `home-background.jpeg`;
+    console.log(req.files.hero_background);
 
-    await sharp(req.files.hero_background[0].buffer)
-      .toFormat('jpeg')
-      .jpeg({ quality: 90 })
-      .toFile(`public/img/home/${backgroundImageFilename}`);
+    if (req.files.hero_background[0].mimetype.startsWith('video')) {
+      const file = req.files.hero_background[0];
+      const ext = file.mimetype.split('/')[1];
 
-    req.body.hero_background = backgroundImageFilename;
+      const backgroundVideoFilename = `home-${file.fieldname}.${ext}`;
+
+      req.body.hero_background = backgroundVideoFilename;
+    } else {
+      const file = req.files.hero_background[0];
+      const ext = file.mimetype.split('/')[1];
+
+      const backgroundImageFilename = `home-${file.fieldname}.${ext}`;
+
+      req.body.hero_background = backgroundImageFilename;
+    }
   }
 
   // 2) About Us Image
   if (req.files.aboutUs_image) {
-    const aboutUsImageFilename = `home-${req.body.aboutUs.en
-      .split(' ')
-      .join('')}-aboutUs.jpeg`;
+    const file = req.files.aboutUs_image[0];
+    const ext = file.mimetype.split('/')[1];
 
-    await sharp(req.files.aboutUs_image[0].buffer)
-      .toFormat('jpeg')
-      .jpeg({ quality: 90 })
-      .toFile(`public/img/home/${aboutUsImageFilename}`);
+    const aboutUsImageFilename = `home-${file.fieldname}.${ext}`;
 
     req.body.aboutUs_image = aboutUsImageFilename;
   }
 
   // 3) Banner Image
   if (req.files.banner_image) {
-    const bannerImageFilename = `home-${req.body.banner.en
-      .split(' ')
-      .join('')}-banner.jpeg`;
+    const file = req.files.banner_image[0];
+    const ext = file.mimetype.split('/')[1];
 
-    await sharp(req.files.banner_image[0].buffer)
-      .toFormat('jpeg')
-      .jpeg({ quality: 90 })
-      .toFile(`public/img/home/${bannerImageFilename}`);
+    const bannerImageFilename = `home-${file.fieldname}.${ext}`;
 
     req.body.banner_image = bannerImageFilename;
   }

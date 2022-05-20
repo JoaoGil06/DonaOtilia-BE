@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const WinesCategory = require('./../winesCategoryModel');
 const Award = require('./../awardModel');
+const Footer = require('./../footerModel');
 
 const homeSchema = new mongoose.Schema({
   hero_background: String,
@@ -45,6 +46,7 @@ const homeSchema = new mongoose.Schema({
     en: String,
   },
   awards: [{ type: mongoose.Schema.ObjectId, ref: 'Award' }],
+  footer: [{ type: mongoose.Schema.ObjectId, ref: 'Footer' }],
 });
 
 homeSchema.pre('save', async function (next) {
@@ -54,15 +56,22 @@ homeSchema.pre('save', async function (next) {
   const awardsPromises = await Award.find();
   this.awards = await Promise.all(awardsPromises);
 
+  const footerPromises = await Footer.find();
+  this.footer = await Promise.all(footerPromises);
+
   next();
 });
 
 homeSchema.pre(/^find/, async function (next) {
   this.populate({
     path: 'ourWines',
-  }).populate({
-    path: 'awards',
-  });
+  })
+    .populate({
+      path: 'awards',
+    })
+    .populate({
+      path: 'footer',
+    });
 
   next();
 });

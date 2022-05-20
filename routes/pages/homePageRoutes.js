@@ -6,7 +6,7 @@ const {
   updateHomePage,
   deleteHomePage,
   uploadHomePageImages,
-  resizeHomePageImages,
+  saveHomePageFilesInDB,
 } = require('./../../controllers/pages/homePageController');
 
 const { protect, restrictTo } = require('./../../controllers/authController');
@@ -20,7 +20,7 @@ router
     protect,
     restrictTo('admin'),
     uploadHomePageImages,
-    resizeHomePageImages,
+    saveHomePageFilesInDB,
     createHomePage
   );
 
@@ -31,7 +31,7 @@ router
     protect,
     restrictTo('admin'),
     uploadHomePageImages,
-    resizeHomePageImages,
+    saveHomePageFilesInDB,
     updateHomePage
   )
   .delete(protect, restrictTo('admin'), deleteHomePage);

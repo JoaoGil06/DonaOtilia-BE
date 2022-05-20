@@ -29,14 +29,25 @@ exports.resizeGalleryImage = catchAsync(async (req, res, next) => {
   if (req.file) {
     const galleryImage = `gallery-image-${req.body.title.en
       .split(' ')
-      .join('')}-${Date.now()}.jpeg`;
+      .join('')}.jpeg`;
 
     await sharp(req.file.buffer)
       .toFormat('jpeg')
       .jpeg({ quality: 90 })
       .toFile(`public/img/gallery/${galleryImage}`);
 
+    const galleryImageThumbnail = `gallery-image-thumbnail-${req.body.title.en
+      .split(' ')
+      .join('')}.jpeg`;
+
+    await sharp(req.file.buffer)
+      .resize(500, 500)
+      .toFormat('jpeg')
+      .jpeg({ quality: 90 })
+      .toFile(`public/img/gallery/${galleryImageThumbnail}`);
+
     req.body.image = galleryImage;
+    req.body.image_thumbnail = galleryImageThumbnail;
   }
 
   next();

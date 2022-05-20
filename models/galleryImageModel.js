@@ -24,6 +24,7 @@ const galleryImageSchema = new mongoose.Schema({
     },
   },
   image: String,
+  image_thumbnail: String,
 });
 
 const GalleryImage = mongoose.model('GalleryImage', galleryImageSchema);

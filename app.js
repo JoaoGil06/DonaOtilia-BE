@@ -16,6 +16,7 @@ const brandRouter = require('./routes/brandRoutes');
 const cocktailRouter = require('./routes/cocktailRoutes');
 const awardRouter = require('./routes/awardRoutes');
 const galleryImageRouter = require('./routes/galleryImageRoutes');
+const footerRouter = require('./routes/footerRoutes');
 
 //Pages
 const homePageRouter = require('./routes/pages/homePageRoutes');
@@ -63,6 +64,7 @@ app.use('/api/v1/brands', brandRouter);
 app.use('/api/v1/cocktails', cocktailRouter);
 app.use('/api/v1/awards', awardRouter);
 app.use('/api/v1/galleryImage', galleryImageRouter);
+app.use('/api/v1/footer', footerRouter);
 
 // Pages
 app.use('/api/v1/homePage', homePageRouter);
