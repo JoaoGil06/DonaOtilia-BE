@@ -6,9 +6,12 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cors = require('cors');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
+
+// Routers
 const wineRouter = require('./routes/wineRoutes');
 const userRouter = require('./routes/userRoutes');
 const winesCategoryRouter = require('./routes/winesCategoryRoutes');
@@ -26,6 +29,9 @@ const awardsPageRouter = require('./routes/pages/awardsPageRoute');
 const cocktailsPageRouter = require('./routes/pages/cocktailsPageRoute');
 
 const app = express();
+
+//CORS
+app.use(cors());
 
 // Security HTTP Headers
 app.use(helmet());
