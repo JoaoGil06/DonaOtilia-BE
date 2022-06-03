@@ -25,6 +25,8 @@ const upload = multer({
 exports.uploadAwardImage = upload.single('image');
 
 exports.resizeAwardImage = catchAsync(async (req, res, next) => {
+  const url = req.protocol + '://' + req.get('host');
+
   // 1) Image
   if (req.file) {
     const awardImage = `award-${req.body.title.en
@@ -36,7 +38,7 @@ exports.resizeAwardImage = catchAsync(async (req, res, next) => {
       .jpeg({ quality: 90 })
       .toFile(`public/img/awards/${awardImage}`);
 
-    req.body.image = awardImage;
+    req.body.image = `${url}/public/img/home/${awardImage}`;
   }
 
   next();

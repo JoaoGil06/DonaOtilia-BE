@@ -25,6 +25,8 @@ const upload = multer({
 exports.uploadCocktailImage = upload.single('image');
 
 exports.resizeCocktailImage = catchAsync(async (req, res, next) => {
+  const url = req.protocol + '://' + req.get('host');
+
   // 1) Image
   if (req.file) {
     const cocktailImage = `cocktail-${req.body.title.en
@@ -36,7 +38,7 @@ exports.resizeCocktailImage = catchAsync(async (req, res, next) => {
       .jpeg({ quality: 90 })
       .toFile(`public/img/cocktails/${cocktailImage}`);
 
-    req.body.image = cocktailImage;
+    req.body.image = `${url}/public/img/cocktails/${cocktailImage}`;
   }
 
   next();

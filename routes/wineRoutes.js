@@ -17,25 +17,13 @@ const router = express.Router();
 router
   .route('/')
   .get(getAllWines)
-  .post(
-    protect,
-    restrictTo('admin'),
-    uploadWineImages,
-    resizeWineImages,
-    createWine
-  );
+  .post(uploadWineImages, resizeWineImages, createWine);
 
 router
   .route('/:id')
   .get(getWine)
-  .patch(
-    protect,
-    restrictTo('admin'),
-    uploadWineImages,
-    resizeWineImages,
-    updateWine
-  )
-  .delete(protect, restrictTo('admin'), deleteWine);
+  .patch(uploadWineImages, resizeWineImages, updateWine)
+  .delete(deleteWine);
 
 router.route('/category/:categoryId').get(getAllWinesByCategory);
 

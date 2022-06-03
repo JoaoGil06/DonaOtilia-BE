@@ -25,6 +25,7 @@ const upload = multer({
 exports.uploadWinesCategoryPageImage = upload.single('hero_background');
 
 exports.resizeWinesCategoryPageImage = catchAsync(async (req, res, next) => {
+  const url = req.protocol + '://' + req.get('host');
   // 1) hero background
   if (req.file) {
     const winesCategoryPageImage = `winesCategoryPage.jpeg`;
@@ -34,7 +35,7 @@ exports.resizeWinesCategoryPageImage = catchAsync(async (req, res, next) => {
       .jpeg({ quality: 90 })
       .toFile(`public/img/winesCategoryPage/${winesCategoryPageImage}`);
 
-    req.body.image = winesCategoryPageImage;
+    req.body.image = `${url}/public/img/winesCategoryPage/${winesCategoryPageImage}`;
   }
 
   next();

@@ -37,8 +37,11 @@ exports.uploadHomePageImages = upload.fields([
 
 exports.saveHomePageFilesInDB = catchAsync(async (req, res, next) => {
   // 1) Background Hero
+  console.log('BODY', req.body);
+  console.log('FILES', req.files);
+  const url = req.protocol + '://' + req.get('host');
   if (req.files.hero_background) {
-    console.log(req.files.hero_background);
+    // console.log(req.files.hero_background);
 
     if (req.files.hero_background[0].mimetype.startsWith('video')) {
       const file = req.files.hero_background[0];
@@ -46,14 +49,14 @@ exports.saveHomePageFilesInDB = catchAsync(async (req, res, next) => {
 
       const backgroundVideoFilename = `home-${file.fieldname}.${ext}`;
 
-      req.body.hero_background = backgroundVideoFilename;
+      req.body.hero_background = `${url}/public/img/home/${backgroundVideoFilename}`;
     } else {
       const file = req.files.hero_background[0];
       const ext = file.mimetype.split('/')[1];
 
       const backgroundImageFilename = `home-${file.fieldname}.${ext}`;
 
-      req.body.hero_background = backgroundImageFilename;
+      req.body.hero_background = `${url}/public/img/home/${backgroundImageFilename}`;
     }
   }
 
@@ -64,7 +67,7 @@ exports.saveHomePageFilesInDB = catchAsync(async (req, res, next) => {
 
     const aboutUsImageFilename = `home-${file.fieldname}.${ext}`;
 
-    req.body.aboutUs_image = aboutUsImageFilename;
+    req.body.aboutUs_image = `${url}/public/img/home/${aboutUsImageFilename}`;
   }
 
   // 3) Banner Image
@@ -74,7 +77,7 @@ exports.saveHomePageFilesInDB = catchAsync(async (req, res, next) => {
 
     const bannerImageFilename = `home-${file.fieldname}.${ext}`;
 
-    req.body.banner_image = bannerImageFilename;
+    req.body.banner_image = `${url}/public/img/home/${bannerImageFilename}`;
   }
 
   next();

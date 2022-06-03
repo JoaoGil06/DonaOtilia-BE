@@ -15,7 +15,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(getAllHomePages)
+  .get(protect, restrictTo('admin'), getAllHomePages)
   .post(
     protect,
     restrictTo('admin'),
@@ -27,13 +27,7 @@ router
 router
   .route('/:id')
   .get(getHomePage)
-  .patch(
-    protect,
-    restrictTo('admin'),
-    uploadHomePageImages,
-    saveHomePageFilesInDB,
-    updateHomePage
-  )
+  .patch(uploadHomePageImages, saveHomePageFilesInDB, updateHomePage)
   .delete(protect, restrictTo('admin'), deleteHomePage);
 
 module.exports = router;

@@ -21,7 +21,7 @@ exports.getAll = (Model) =>
       status: 'success',
       requestedAt: req.requestTime,
       results: doc.length,
-      data: { data: doc },
+      data: doc,
     });
   });
 

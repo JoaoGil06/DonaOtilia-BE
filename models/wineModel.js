@@ -5,12 +5,10 @@ const wineSchema = new mongoose.Schema({
   title: {
     pt: {
       type: String,
-      required: [true, 'Um vinho deve sempre ter um titulo em português'],
       trim: true,
     },
     en: {
       type: String,
-      required: [true, 'Um vinho deve sempre ter um titulo em inglês'],
       trim: true,
     },
   },
@@ -28,14 +26,8 @@ const wineSchema = new mongoose.Schema({
   product_img_hover: String,
   year: Number,
   castes: {
-    pt: {
-      type: [String],
-      required: [true, 'Um vinho deve sempre ter castas em português'],
-    },
-    en: {
-      type: [String],
-      required: [true, 'Um vinho deve sempre ter castas em inglês'],
-    },
+    pt: [String],
+    en: [String],
   },
   alcohol: Number,
   temperature: [Number],
@@ -53,6 +45,10 @@ const wineSchema = new mongoose.Schema({
     en: String,
   },
   harmony_suggestion_image: String,
+  taste_proof: {
+    pt: String,
+    en: String,
+  },
   category: { type: mongoose.Schema.ObjectId, ref: 'WinesCategory' },
 });
 

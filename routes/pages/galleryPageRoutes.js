@@ -11,15 +11,12 @@ const { protect, restrictTo } = require('./../../controllers/authController');
 
 const router = express.Router();
 
-router
-  .route('/')
-  .get(getAllGalleryPages)
-  .post(protect, restrictTo('admin'), createGalleryPage);
+router.route('/').get(getAllGalleryPages).post(createGalleryPage);
 
 router
   .route('/:id')
   .get(getGalleryPage)
-  .patch(protect, restrictTo('admin'), updateGalleryPage)
-  .delete(protect, restrictTo('admin'), deleteGalleryPage);
+  .patch(updateGalleryPage)
+  .delete(deleteGalleryPage);
 
 module.exports = router;

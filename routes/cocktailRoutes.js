@@ -16,24 +16,12 @@ const router = express.Router();
 router
   .route('/')
   .get(getAllCocktails)
-  .post(
-    protect,
-    restrictTo('admin'),
-    uploadCocktailImage,
-    resizeCocktailImage,
-    createCocktail
-  );
+  .post(uploadCocktailImage, resizeCocktailImage, createCocktail);
 
 router
   .route('/:id')
   .get(getCocktail)
-  .patch(
-    protect,
-    restrictTo('admin'),
-    uploadCocktailImage,
-    resizeCocktailImage,
-    updateCocktail
-  )
-  .delete(protect, restrictTo('admin'), deleteCocktail);
+  .patch(uploadCocktailImage, resizeCocktailImage, updateCocktail)
+  .delete(deleteCocktail);
 
 module.exports = router;

@@ -30,6 +30,8 @@ exports.uploadWineImages = upload.fields([
 ]);
 
 exports.resizeWineImages = catchAsync(async (req, res, next) => {
+  const url = req.protocol + '://' + req.get('host');
+
   // 1) Bottle Image
   if (req.files.bottle_image) {
     const bottleImageFilename = `wine-${req.body.title.en
@@ -41,7 +43,7 @@ exports.resizeWineImages = catchAsync(async (req, res, next) => {
       .jpeg({ quality: 90 })
       .toFile(`public/img/wines/${bottleImageFilename}`);
 
-    req.body.bottle_image = bottleImageFilename;
+    req.body.bottle_image = `${url}/public/img/wines/${bottleImageFilename}`;
   }
 
   // 2) Product Image
@@ -55,7 +57,7 @@ exports.resizeWineImages = catchAsync(async (req, res, next) => {
       .jpeg({ quality: 90 })
       .toFile(`public/img/wines/${productImageFilename}`);
 
-    req.body.product_img = productImageFilename;
+    req.body.product_img = `${url}/public/img/wines/${productImageFilename}`;
   }
 
   // 3) Product Image Hover
@@ -69,7 +71,7 @@ exports.resizeWineImages = catchAsync(async (req, res, next) => {
       .jpeg({ quality: 90 })
       .toFile(`public/img/wines/${productImageHoverFilename}`);
 
-    req.body.product_img_hover = productImageHoverFilename;
+    req.body.product_img_hover = `${url}/public/img/wines/${productImageHoverFilename}`;
   }
 
   // 4) Harmony Suggestion Image
@@ -83,7 +85,7 @@ exports.resizeWineImages = catchAsync(async (req, res, next) => {
       .jpeg({ quality: 90 })
       .toFile(`public/img/wines/${harmonySuggestionFilename}`);
 
-    req.body.harmony_suggestion_image = harmonySuggestionFilename;
+    req.body.harmony_suggestion_image = `${url}/public/img/wines/${harmonySuggestionFilename}`;
   }
 
   next();

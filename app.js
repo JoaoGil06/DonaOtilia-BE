@@ -7,6 +7,8 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -31,7 +33,12 @@ const cocktailsPageRouter = require('./routes/pages/cocktailsPageRoute');
 const app = express();
 
 //CORS
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: true,
+  })
+);
 
 // Security HTTP Headers
 app.use(helmet());
@@ -43,15 +50,20 @@ if (process.env.NODE_ENV === 'development') {
 
 // Limit requests from same API
 const limiter = rateLimit({
-  max: 100,
+  max: 1000,
   windowMs: 60 * 60 * 1000,
   message: 'Too many requests from this IP, please try again in an hour!',
 });
+app.use('/public', express.static('public'));
 app.use('/api', limiter);
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Data sanitazation against NoSQL query injection
 app.use(mongoSanitize());

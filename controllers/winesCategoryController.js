@@ -24,6 +24,7 @@ const upload = multer({
 exports.uploadCategoryImage = upload.single('image');
 
 exports.resizeCategoryImage = catchAsync(async (req, res, next) => {
+  const url = req.protocol + '://' + req.get('host');
   // 1) Image
   if (req.file) {
     const categoryImage = `wineCategory-${req.body.title.en
@@ -35,7 +36,7 @@ exports.resizeCategoryImage = catchAsync(async (req, res, next) => {
       .jpeg({ quality: 90 })
       .toFile(`public/img/wines/${categoryImage}`);
 
-    req.body.image = categoryImage;
+    req.body.image = `${url}/public/img/wines/${categoryImage}`;
   }
 
   next();

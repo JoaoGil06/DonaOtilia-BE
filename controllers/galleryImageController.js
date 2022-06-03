@@ -25,11 +25,13 @@ const upload = multer({
 exports.uploadGalleryImageImage = upload.single('image');
 
 exports.resizeGalleryImage = catchAsync(async (req, res, next) => {
+  const url = req.protocol + '://' + req.get('host');
+
   // 1) Image
   if (req.file) {
     const galleryImage = `gallery-image-${req.body.title.en
       .split(' ')
-      .join('')}.jpeg`;
+      .join('')}-${Date.now()}.jpeg`;
 
     await sharp(req.file.buffer)
       .toFormat('jpeg')
@@ -46,8 +48,8 @@ exports.resizeGalleryImage = catchAsync(async (req, res, next) => {
       .jpeg({ quality: 90 })
       .toFile(`public/img/gallery/${galleryImageThumbnail}`);
 
-    req.body.image = galleryImage;
-    req.body.image_thumbnail = galleryImageThumbnail;
+    req.body.image = `${url}/public/img/gallery/${galleryImage}`;
+    req.body.image_thumbnail = `${url}/public/img/gallery/${galleryImageThumbnail}`;
   }
 
   next();

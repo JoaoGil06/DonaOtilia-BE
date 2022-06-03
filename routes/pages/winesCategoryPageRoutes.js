@@ -28,8 +28,6 @@ router
   .route('/:id')
   .get(getWinesCategoryPage)
   .patch(
-    protect,
-    restrictTo('admin'),
     uploadWinesCategoryPageImage,
     resizeWinesCategoryPageImage,
     updateWinesCategoryPage
