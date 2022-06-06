@@ -3,23 +3,26 @@ const AppError = require('./../utils/appError');
 const handleValidationErrorDB = (error) => {
   const errors = Object.values(error.errors).map((err) => err.message);
 
-  const message = `Duplicate field value: ${errors.join(
+  const message = `Valor duplicado: ${errors.join(
     '. '
-  )}. Please use antoher value!`;
+  )}. Por favor usa outro valor!`;
 
   return new AppError(message, 400);
 };
 
 const handleJWTError = (err) =>
-  new AppError('Invalid token. Please log in again!', 401);
+  new AppError(
+    'A tua sessão não é válida. Por favor, faz log in outra vez!',
+    401
+  );
 
 const handleJWTExpiredError = (error) =>
-  new AppError('Your token has expired. Please log in again!', 401);
+  new AppError('A tua sessão expirou. Por favor, faz log in outra vez!', 401);
 
 const handleDuplicateFieldsDB = (error) => {
   const value = error.errmsg.match(/(["'])(\\?.)*?\1/);
 
-  const message = `Duplicate field value: ${value}. Please use antoher value!`;
+  const message = `Valor duplicado: ${value}. Por favor usa outro valor!`;
 
   return new AppError(message, 400);
 };
@@ -42,7 +45,7 @@ const sendErrorDev = (error, req, res) => {
   } else {
     // RENDERED WEBSITE
     return res.status(error.statusCode).render('error', {
-      title: 'Something went wrong!',
+      title: 'Algo correu mal!',
       msg: error.message,
     });
   }
@@ -59,19 +62,19 @@ const sendErrorProd = (error, req, res) => {
     }
     return res.status(500).json({
       status: 'error',
-      message: 'Something went wrong!',
+      message: 'Algo correu mal!',
     });
   } else {
     // RENDERED WEBSITE
     if (error.isOperational) {
       return res.status(error.statusCode).render('error', {
-        title: 'Something went wrong!',
+        title: 'Algo correu mal!',
         msg: error.message,
       });
     }
     return res.status(error.statusCode).render('error', {
-      title: 'Something went wrong!',
-      msg: 'Please try again later.',
+      title: 'Algo correu mal!',
+      msg: 'Por favor tenta outra vez mais tarde.',
     });
   }
 };

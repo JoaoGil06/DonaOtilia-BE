@@ -38,7 +38,7 @@ exports.resizeAwardImage = catchAsync(async (req, res, next) => {
       .jpeg({ quality: 90 })
       .toFile(`public/img/awards/${awardImage}`);
 
-    req.body.image = `${url}/public/img/home/${awardImage}`;
+    req.body.image = `${url}/public/img/awards/${awardImage}`;
   }
 
   next();

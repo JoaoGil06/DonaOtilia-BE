@@ -16,12 +16,24 @@ const router = express.Router();
 router
   .route('/')
   .get(getAllWinesCategories)
-  .post(uploadCategoryImage, resizeCategoryImage, createWinesCategory);
+  .post(
+    protect,
+    restrictTo('admin'),
+    uploadCategoryImage,
+    resizeCategoryImage,
+    createWinesCategory
+  );
 
 router
   .route('/:id')
   .get(getWinesCategory)
-  .patch(uploadCategoryImage, resizeCategoryImage, updateWinesCategory)
-  .delete(deleteWinesCategory);
+  .patch(
+    protect,
+    restrictTo('admin'),
+    uploadCategoryImage,
+    resizeCategoryImage,
+    updateWinesCategory
+  )
+  .delete(protect, restrictTo('admin'), deleteWinesCategory);
 
 module.exports = router;

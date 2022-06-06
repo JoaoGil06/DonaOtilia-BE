@@ -16,12 +16,24 @@ const router = express.Router();
 router
   .route('/')
   .get(getAllGalleryImages)
-  .post(uploadGalleryImageImage, resizeGalleryImage, createGalleryImage);
+  .post(
+    protect,
+    restrictTo('admin'),
+    uploadGalleryImageImage,
+    resizeGalleryImage,
+    createGalleryImage
+  );
 
 router
   .route('/:id')
   .get(getGalleryImage)
-  .patch(uploadGalleryImageImage, resizeGalleryImage, updateGalleryImage)
-  .delete(deleteGalleryImage);
+  .patch(
+    protect,
+    restrictTo('admin'),
+    uploadGalleryImageImage,
+    resizeGalleryImage,
+    updateGalleryImage
+  )
+  .delete(protect, restrictTo('admin'), deleteGalleryImage);
 
 module.exports = router;

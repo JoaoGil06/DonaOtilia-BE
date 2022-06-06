@@ -27,7 +27,13 @@ router
 router
   .route('/:id')
   .get(getHomePage)
-  .patch(uploadHomePageImages, saveHomePageFilesInDB, updateHomePage)
+  .patch(
+    protect,
+    restrictTo('admin'),
+    uploadHomePageImages,
+    saveHomePageFilesInDB,
+    updateHomePage
+  )
   .delete(protect, restrictTo('admin'), deleteHomePage);
 
 module.exports = router;

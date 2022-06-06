@@ -11,12 +11,10 @@ const { protect, restrictTo } = require('../controllers/authController');
 
 const router = express.Router();
 
-router.route('/').get(getAllAppConfigurations).post(
-  protect,
-  restrictTo('admin'),
-
-  createAppConfiguration
-);
+router
+  .route('/')
+  .get(getAllAppConfigurations)
+  .post(protect, restrictTo('admin'), createAppConfiguration);
 
 router
   .route('/:id')

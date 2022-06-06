@@ -11,8 +11,15 @@ const { protect, restrictTo } = require('./../controllers/authController');
 
 const router = express.Router();
 
-router.route('/').get(getAllBrands).post(createBrand);
+router
+  .route('/')
+  .get(getAllBrands)
+  .post(protect, restrictTo('admin'), createBrand);
 
-router.route('/:id').get(getBrand).patch(updateBrand).delete(deleteBrand);
+router
+  .route('/:id')
+  .get(getBrand)
+  .patch(protect, restrictTo('admin'), updateBrand)
+  .delete(protect, restrictTo('admin'), deleteBrand);
 
 module.exports = router;

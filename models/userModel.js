@@ -5,16 +5,15 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Please tell us your name'],
+    required: [true, 'Por favor insere um nome'],
   },
   email: {
     type: String,
-    required: [true, 'Please provide your email'],
+    required: [true, 'Por favor insere um email'],
     unique: true,
     lowercase: true,
-    validate: [validator.isEmail, 'Please provide a valid email'],
+    validate: [validator.isEmail, 'Por favor insere um email válido'],
   },
-
   role: {
     type: String,
     enum: ['user', 'admin'],
@@ -22,18 +21,17 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Please provide a password'],
-    minlength: 8,
+    required: [true, 'Por favor insere uma password'],
     select: false,
   },
   passwordConfirm: {
     type: String,
-    required: [true, 'Please confirm your password'],
+    required: [true, 'Por favor confirma a password'],
     validate: {
       validator: function (el) {
         return el === this.password;
       },
-      message: 'Passwords are not the same',
+      message: 'As passwords não são iguais. Por favor, escreve novamente.',
     },
   },
 });
