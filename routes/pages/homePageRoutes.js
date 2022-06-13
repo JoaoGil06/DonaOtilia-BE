@@ -15,7 +15,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(protect, restrictTo('admin'), getAllHomePages)
+  .get(getAllHomePages)
   .post(
     protect,
     restrictTo('admin'),

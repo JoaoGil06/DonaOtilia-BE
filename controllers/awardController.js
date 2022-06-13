@@ -31,11 +31,11 @@ exports.resizeAwardImage = catchAsync(async (req, res, next) => {
   if (req.file) {
     const awardImage = `award-${req.body.title.en
       .split(' ')
-      .join('')}-${Date.now()}.jpeg`;
+      .join('')}-${Date.now()}.png`;
 
     await sharp(req.file.buffer)
-      .toFormat('jpeg')
-      .jpeg({ quality: 90 })
+      .toFormat('png')
+      .png({ quality: 90 })
       .toFile(`public/img/awards/${awardImage}`);
 
     req.body.image = `${url}/public/img/awards/${awardImage}`;

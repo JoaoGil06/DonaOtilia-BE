@@ -31,16 +31,17 @@ exports.uploadWineImages = upload.fields([
 
 exports.resizeWineImages = catchAsync(async (req, res, next) => {
   const url = req.protocol + '://' + req.get('host');
-
+  console.log('req', req);
   // 1) Bottle Image
   if (req.files.bottle_image) {
     const bottleImageFilename = `wine-${req.body.title.en
       .split(' ')
-      .join('')}-bottle.jpeg`;
+      .join('')}-${Date.now()}-bottle.png`;
 
     await sharp(req.files.bottle_image[0].buffer)
-      .toFormat('jpeg')
-      .jpeg({ quality: 90 })
+      .resize({ width: 714, height: 2798 })
+      .toFormat('png')
+      .png({ quality: 90 })
       .toFile(`public/img/wines/${bottleImageFilename}`);
 
     req.body.bottle_image = `${url}/public/img/wines/${bottleImageFilename}`;
@@ -50,9 +51,10 @@ exports.resizeWineImages = catchAsync(async (req, res, next) => {
   if (req.files.product_img) {
     const productImageFilename = `wine-${req.body.title.en
       .split(' ')
-      .join('')}-front.jpeg`;
+      .join('')}-${Date.now()}-front.jpeg`;
 
     await sharp(req.files.product_img[0].buffer)
+      .resize({ width: 350, height: 700 })
       .toFormat('jpeg')
       .jpeg({ quality: 90 })
       .toFile(`public/img/wines/${productImageFilename}`);
@@ -64,9 +66,10 @@ exports.resizeWineImages = catchAsync(async (req, res, next) => {
   if (req.files.product_img_hover) {
     const productImageHoverFilename = `wine-${req.body.title.en
       .split(' ')
-      .join('')}-back.jpeg`;
+      .join('')}-${Date.now()}-back.jpeg`;
 
     await sharp(req.files.product_img_hover[0].buffer)
+      .resize({ width: 350, height: 700 })
       .toFormat('jpeg')
       .jpeg({ quality: 90 })
       .toFile(`public/img/wines/${productImageHoverFilename}`);

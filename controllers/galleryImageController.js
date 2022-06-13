@@ -40,7 +40,7 @@ exports.resizeGalleryImage = catchAsync(async (req, res, next) => {
 
     const galleryImageThumbnail = `gallery-image-thumbnail-${req.body.title.en
       .split(' ')
-      .join('')}.jpeg`;
+      .join('')}-${Date.now()}.jpeg`;
 
     await sharp(req.file.buffer)
       .resize(500, 500)

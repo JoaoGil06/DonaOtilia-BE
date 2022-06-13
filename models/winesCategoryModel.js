@@ -22,6 +22,7 @@ const winesCategorySchema = new mongoose.Schema({
   },
   type: { type: String },
   image: String,
+  banner: String,
 });
 
 winesCategorySchema.pre('save', function (next) {

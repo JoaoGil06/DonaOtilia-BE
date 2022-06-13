@@ -21,22 +21,43 @@ const upload = multer({
   fileFilter: multerFilter,
 });
 
-exports.uploadCategoryImage = upload.single('image');
+// upload.single('image');
+
+exports.uploadCategoryImage = upload.fields([
+  { name: 'image', maxCount: 1 },
+  { name: 'banner', maxCount: 1 },
+]);
 
 exports.resizeCategoryImage = catchAsync(async (req, res, next) => {
   const url = req.protocol + '://' + req.get('host');
   // 1) Image
-  if (req.file) {
+
+  if (req.files.image) {
     const categoryImage = `wineCategory-${req.body.title.en
       .split(' ')
       .join('')}-${Date.now()}.jpeg`;
 
-    await sharp(req.file.buffer)
+    await sharp(req.files.image[0].buffer)
+      .resize({ height: 2048 })
       .toFormat('jpeg')
       .jpeg({ quality: 90 })
       .toFile(`public/img/wines/${categoryImage}`);
 
     req.body.image = `${url}/public/img/wines/${categoryImage}`;
+  }
+
+  if (req.files.banner) {
+    const categoryBanner = `wineCategory-${req.body.title.en
+      .split(' ')
+      .join('')}-${Date.now()}-banner.jpeg`;
+
+    await sharp(req.files.banner[0].buffer)
+      .resize()
+      .toFormat('jpeg')
+      .jpeg({ quality: 90 })
+      .toFile(`public/img/wines/${categoryBanner}`);
+
+    req.body.banner = `${url}/public/img/wines/${categoryBanner}`;
   }
 
   next();

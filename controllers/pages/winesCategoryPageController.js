@@ -28,6 +28,8 @@ exports.resizeWinesCategoryPageImage = catchAsync(async (req, res, next) => {
   const url = req.protocol + '://' + req.get('host');
   // 1) hero background
   if (req.file) {
+    console.log('file', req.file);
+
     const winesCategoryPageImage = `winesCategoryPage.jpeg`;
 
     await sharp(req.file.buffer)
@@ -35,7 +37,7 @@ exports.resizeWinesCategoryPageImage = catchAsync(async (req, res, next) => {
       .jpeg({ quality: 90 })
       .toFile(`public/img/winesCategoryPage/${winesCategoryPageImage}`);
 
-    req.body.image = `${url}/public/img/winesCategoryPage/${winesCategoryPageImage}`;
+    req.body.hero_background = `${url}/public/img/winesCategoryPage/${winesCategoryPageImage}`;
   }
 
   next();
